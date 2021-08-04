@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "629203927766",
+    "project_id": "punch-application",
+    "storage_bucket": "punch-application.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:629203927766:android:23c0bd21135c5249433f77",
+        "android_client_info": {
+          "package_name": "com.punch.android.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "629203927766-3q44fug0mjuk3rngomrbl5kq1q500mah.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.punch.android.admin",
+            "certificate_hash": "d06c1d02087ed2a6ca47c3f165fb6d685a7023a9"
+          }
+        },
+        {
+          "client_id": "629203927766-3dibmpdc86tfuomfh8n8mov32fh7ar53.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACZLLDUJlfTtdnVvqi0su0E-SFNpSg8YA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "629203927766-3dibmpdc86tfuomfh8n8mov32fh7ar53.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
