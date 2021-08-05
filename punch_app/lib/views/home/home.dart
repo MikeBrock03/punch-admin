@@ -30,6 +30,7 @@ class _HomeState extends State<Home> {
   int bottomSelectedIndex = 0;
   var _internPage, _companyPage;
   int backPress = 0;
+
   final keyOne = GlobalKey();
 
   @override

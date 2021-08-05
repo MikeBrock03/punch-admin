@@ -282,7 +282,7 @@ class _RegisterState extends State<Register> with TickerProviderStateMixin {
                                 color: AppColors.primaryColor,
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal)),
-                      )), 
+                      )),
                   SizedBox(height: 30),
                   GestureDetector(
                     onTap: () async {
@@ -303,7 +303,7 @@ class _RegisterState extends State<Register> with TickerProviderStateMixin {
                     },
                     child: Column(
                       children: [
-                        Text('TEST 2. Free month trial. Subscribe at ',
+                        Text('TEST 3. Free month trial. Subscribe at ',
                             style: TextStyle(
                                 fontSize: 14, color: Colors.grey[500])),
                         SizedBox(height: 10),
