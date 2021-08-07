@@ -51,6 +51,11 @@ flutter:
     - assets/images/
     - assets/langs/
     - assets/jsons/
+    - assets/fonts/
+  fonts:
+    - family: MyriadPro
+    - fonts: 
+      - asset: assets/fonts/MyriadPro-Light.otf
 
   # fonts:
   #   - family: Fontawesome

@@ -69,8 +69,12 @@ class _HomeState extends State<Home> {
         key: globalScaffoldKey,
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context).translate('app_title'),
-              style: TextStyle(fontSize: 18)),
+          title: new Image.asset(
+            'assets/images/punch_logo_titlebar.png',
+            width: 200.0,
+            height: 200.0,
+            fit: BoxFit.cover,
+          ),
           centerTitle: true,
           brightness: Brightness.dark,
           actions: [

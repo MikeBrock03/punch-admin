@@ -70,7 +70,9 @@ class _RegisterState extends State<Register> with TickerProviderStateMixin {
             centerTitle: true,
             brightness: Brightness.dark,
             title: Text(AppLocalizations.of(context).translate('register'),
-                style: TextStyle(fontSize: 17)),
+                style: TextStyle(
+                  fontSize: 17,
+                )),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () => AppNavigator.pushReplace(
