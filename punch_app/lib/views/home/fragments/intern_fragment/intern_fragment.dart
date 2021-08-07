@@ -45,12 +45,12 @@ class _InternFragmentState extends State<InternFragment>
       padding: const EdgeInsets.all(15.0),
       child: Column(
         children: [
-          SizedBox(height: 20),
+          SizedBox(height: 40),
           Center(
               child: Text(
                   AppLocalizations.of(context).translate('interns_title'),
                   style: TextStyle(
-                      fontSize: 25,
+                      fontSize: 30,
                       color: Colors.grey[700],
                       fontFamily: 'MyriadPro'))),
           SizedBox(height: 30),

@@ -305,7 +305,7 @@ class _RegisterState extends State<Register> with TickerProviderStateMixin {
                     },
                     child: Column(
                       children: [
-                        Text('TEST 3. Free month trial. Subscribe at ',
+                        Text('Free month trial. Subscribe at ',
                             style: TextStyle(
                                 fontSize: 14, color: Colors.grey[500])),
                         SizedBox(height: 10),

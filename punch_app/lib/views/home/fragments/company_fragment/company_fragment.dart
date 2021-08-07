@@ -56,7 +56,7 @@ class _CompanyFragmentState extends State<CompanyFragment>
                       AppLocalizations.of(context)
                           .translate('intern_companies'),
                       style: TextStyle(
-                          fontSize: 40,
+                          fontSize: 30,
                           color: Colors.grey[700],
                           fontFamily: 'MyriadPro'))),
               SizedBox(height: 25),
