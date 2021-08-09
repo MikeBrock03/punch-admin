@@ -52,6 +52,7 @@ flutter:
     - assets/langs/
     - assets/jsons/
     - assets/fonts/
+  
   fonts:
     - family: MyriadPro
     - fonts: 

@@ -18,18 +18,16 @@ import '../../../helpers/progress_button.dart';
 import '../../../view_models/user_view_model.dart';
 
 class RegCodeFragment extends StatefulWidget {
-
   final GlobalKey<ScaffoldState> globalScaffoldKey;
   final Function() onFinish;
-  RegCodeFragment({ this.globalScaffoldKey, this.onFinish });
+  RegCodeFragment({this.globalScaffoldKey, this.onFinish});
 
   @override
   _RegCodeFragmentState createState() => _RegCodeFragmentState();
 }
 
-
-class _RegCodeFragmentState extends State<RegCodeFragment> with TickerProviderStateMixin{
-
+class _RegCodeFragmentState extends State<RegCodeFragment>
+    with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final Storage storage = new Storage();
   AnimationController _buttonAnimationController;
@@ -51,17 +49,23 @@ class _RegCodeFragmentState extends State<RegCodeFragment> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    return FocusWatcher(child: Scaffold(body: regCodeFragmentBody(), resizeToAvoidBottomInset: false));
+    return FocusWatcher(
+        child: Scaffold(
+            body: regCodeFragmentBody(), resizeToAvoidBottomInset: false));
   }
 
-  Widget regCodeFragmentBody(){
-
+  Widget regCodeFragmentBody() {
     String name = '';
     code = Provider.of<UserViewModel>(context, listen: false).regCode;
     email = Provider.of<UserViewModel>(context, listen: false).email;
 
-    if(Provider.of<UserViewModel>(context, listen: false).firstName != '' && Provider.of<UserViewModel>(context, listen: false).lastName != ''){
-       name = capitalize(Provider.of<UserViewModel>(context, listen: false).firstName) + ' ' + capitalize(Provider.of<UserViewModel>(context, listen: false).lastName);
+    if (Provider.of<UserViewModel>(context, listen: false).firstName != '' &&
+        Provider.of<UserViewModel>(context, listen: false).lastName != '') {
+      name = capitalize(
+              Provider.of<UserViewModel>(context, listen: false).firstName) +
+          ' ' +
+          capitalize(
+              Provider.of<UserViewModel>(context, listen: false).lastName);
     }
 
     return FadingEdgeScrollView.fromSingleChildScrollView(
@@ -71,16 +75,20 @@ class _RegCodeFragmentState extends State<RegCodeFragment> with TickerProviderSt
         child: FadeInUp(
           from: 10,
           child: Container(
-            padding: const EdgeInsets.fromLTRB(30, 40, 30, 30 ),
+            padding: const EdgeInsets.fromLTRB(30, 40, 30, 30),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(AppLocalizations.of(context).translate('hi'), style: TextStyle(fontSize: 60, color: Colors.grey[600])),
-                Text(name, style: TextStyle(fontSize: 30, color: Colors.grey[600])),
+                Text(AppLocalizations.of(context).translate('hi'),
+                    style: TextStyle(fontSize: 60, color: Colors.grey[600])),
+                Text(name,
+                    style: TextStyle(fontSize: 30, color: Colors.grey[600])),
                 SizedBox(height: 20),
-                Text(AppLocalizations.of(context).translate('we_are_exited'), style: TextStyle(fontSize: 18, color: Colors.grey[500])),
+                Text(AppLocalizations.of(context).translate('we_are_exited'),
+                    style: TextStyle(fontSize: 18, color: Colors.grey[500])),
                 SizedBox(height: 40),
-                Text(AppLocalizations.of(context).translate('reg_code_title'), style: TextStyle(fontSize: 18, color: Colors.grey[500])),
+                Text(AppLocalizations.of(context).translate('reg_code_title'),
+                    style: TextStyle(fontSize: 18, color: Colors.grey[500])),
                 SizedBox(height: 30),
                 Form(
                   key: _formKey,
@@ -88,34 +96,31 @@ class _RegCodeFragmentState extends State<RegCodeFragment> with TickerProviderSt
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     width: MediaQuery.of(context).size.width,
                     child: Column(
-
                       children: <Widget>[
-
                         AppTextField(
                           isEnable: regCodeSt,
-                          labelText: AppLocalizations.of(context).translate('registration_code'),
-                          textInputFormatter: [FilteringTextInputFormatter.deny(RegExp('[ ]')), UpperCaseTextFormatter()],
+                          labelText: 'Registration Code',
+                          textInputFormatter: [
+                            FilteringTextInputFormatter.deny(RegExp('[ ]')),
+                            UpperCaseTextFormatter()
+                          ],
                           inputAction: TextInputAction.done,
-                          onValidate: (value){
-
+                          onValidate: (value) {
                             if (value.isEmpty) {
-                              return AppLocalizations.of(context).translate('registration_code_empty_validate');
+                              return AppLocalizations.of(context).translate(
+                                  'registration_code_empty_validate');
                             }
                             return null;
                           },
-
-                          onFieldSubmitted: (value){
+                          onFieldSubmitted: (value) {
                             regCode = value;
                             submitForm();
                           },
-
-                          onChanged: (value){
+                          onChanged: (value) {
                             regCode = value;
                           },
                         ),
-
                         SizedBox(height: 18),
-
                         SizedBox(
                           width: MediaQuery.of(context).size.width - 65,
                           height: 50,
@@ -125,51 +130,76 @@ class _RegCodeFragmentState extends State<RegCodeFragment> with TickerProviderSt
                             color: AppColors.primaryColor,
                             progressIndicatorSize: 15,
                             strokeWidth: 2,
-                            child: Text(AppLocalizations.of(context).translate('verify_code'), style:  TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
+                            child: Text(
+                              AppLocalizations.of(context)
+                                  .translate('verify_code'),
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
                             onPressed: (AnimationController controller) {
-                              if(submitSt){
+                              if (submitSt) {
                                 submitForm();
                               }
                             },
                           ),
                         ),
-
                         SizedBox(height: 60),
-
-                        Text(AppLocalizations.of(context).translate('not_receive_code'), style: TextStyle(fontSize: 14, color: Colors.grey[500])),
-
+                        Text(
+                            AppLocalizations.of(context)
+                                .translate('not_receive_code'),
+                            style: TextStyle(
+                                fontSize: 14, color: Colors.grey[500])),
                         SizedBox(height: 10),
-
-                        counterSt == false ? SizedBox(
-                            height: 40,
-                            width: 200,
-                            child: TextButton(
-                              onPressed: submitSt ? (){
-                                sendEmail();
-                              } : null,
-                              child: Text(AppLocalizations.of(context).translate('send_code_again'), style: TextStyle(color: AppColors.primaryColor, fontSize: 14, fontWeight: FontWeight.normal)),
-                            )
-                        ) : Container(
-                          margin: EdgeInsets.only(top: 12),
-                          child: Countdown(
-                            seconds: 59,
-                            build: (BuildContext context, double time) {
-                              var minutes = (time.toInt() % 3600 ~/ 60).toInt().toString().padLeft(2, '0');
-                              var seconds = (time.toInt() % 60).toInt().toString().padLeft(2, '0');
-                              return Text("$minutes:$seconds", style: TextStyle(fontSize: 14, color: Colors.grey[600]));
-                            },
-                            interval: Duration(milliseconds: 100),
-                            onFinished: () {
-                              print('Timer is done!');
-                              setState(() { counterSt = false; });
-                            },
-                          ),
-                        ),
-
+                        counterSt == false
+                            ? SizedBox(
+                                height: 40,
+                                width: 200,
+                                child: TextButton(
+                                  onPressed: submitSt
+                                      ? () {
+                                          sendEmail();
+                                        }
+                                      : null,
+                                  child: Text(
+                                      AppLocalizations.of(context)
+                                          .translate('send_code_again'),
+                                      style: TextStyle(
+                                          color: AppColors.primaryColor,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal)),
+                                ))
+                            : Container(
+                                margin: EdgeInsets.only(top: 12),
+                                child: Countdown(
+                                  seconds: 59,
+                                  build: (BuildContext context, double time) {
+                                    var minutes = (time.toInt() % 3600 ~/ 60)
+                                        .toInt()
+                                        .toString()
+                                        .padLeft(2, '0');
+                                    var seconds = (time.toInt() % 60)
+                                        .toInt()
+                                        .toString()
+                                        .padLeft(2, '0');
+                                    return Text("$minutes:$seconds",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[600]));
+                                  },
+                                  interval: Duration(milliseconds: 100),
+                                  onFinished: () {
+                                    print('Timer is done!');
+                                    setState(() {
+                                      counterSt = false;
+                                    });
+                                  },
+                                ),
+                              ),
                         SizedBox(height: 20)
-
                       ],
-
                     ),
                   ),
                 ),
@@ -181,57 +211,63 @@ class _RegCodeFragmentState extends State<RegCodeFragment> with TickerProviderSt
     );
   }
 
-  void sendEmail() async{
-    Future.delayed(Duration(milliseconds: 250), (){
+  void sendEmail() async {
+    Future.delayed(Duration(milliseconds: 250), () {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context){
+        builder: (BuildContext context) {
           return LoadingDialog();
         },
       );
     });
 
-    await Provider.of<UserViewModel>(context, listen: false).sendEmail( message: 'Your registration code is: $code', email: email);
-    await Future.delayed(Duration(milliseconds: 1500), (){
+    await Provider.of<UserViewModel>(context, listen: false)
+        .sendEmail(message: 'Your registration code is: $code', email: email);
+    await Future.delayed(Duration(milliseconds: 1500), () {
       Navigator.pop(context);
     });
-    await Future.delayed(Duration(milliseconds: 800), (){
-      Message.show(widget.globalScaffoldKey, AppLocalizations.of(context).translate('email_sent'));
+    await Future.delayed(Duration(milliseconds: 800), () {
+      Message.show(widget.globalScaffoldKey,
+          AppLocalizations.of(context).translate('email_sent'));
     });
 
-    setState(() { counterSt = true; });
+    setState(() {
+      counterSt = true;
+    });
   }
 
-  void submitForm() async{
+  void submitForm() async {
     FocusScope.of(context).unfocus();
 
     if (_formKey.currentState.validate()) {
-
       _buttonAnimationController.forward();
 
       setState(() {
         regCodeSt = false;
         submitSt = false;
       });
-      
-      try{
+
+      try {
         await Future.delayed(Duration(milliseconds: 2500));
-        if(code.toUpperCase() == regCode.toUpperCase()){
-          await Provider.of<FirestoreService>(context, listen: false).updateVerified(uID: Provider.of<UserViewModel>(context, listen: false).uID);
+        if (code.toUpperCase() == regCode.toUpperCase()) {
+          await Provider.of<FirestoreService>(context, listen: false)
+              .updateVerified(
+                  uID: Provider.of<UserViewModel>(context, listen: false).uID);
           storage.saveBool('verified', true);
           widget.onFinish();
-        }else{
+        } else {
           setState(() {
             regCodeSt = true;
             submitSt = true;
           });
 
           _buttonAnimationController.reverse();
-          Message.show(widget.globalScaffoldKey, AppLocalizations.of(context).translate('code_not_correct'));
+          Message.show(widget.globalScaffoldKey,
+              AppLocalizations.of(context).translate('code_not_correct'));
         }
-      }catch(error){
-        if(!AppConfig.isPublished){
+      } catch (error) {
+        if (!AppConfig.isPublished) {
           print('$error');
         }
 

@@ -39,7 +39,7 @@ class _VerifyState extends State<Verify> {
           centerTitle: true,
           brightness: Brightness.dark,
           title: Text(
-              AppLocalizations.of(context).translate('account_verification'),
+              AppLocalizations.of(context).translate('registration_code'),
               style: TextStyle(fontSize: 17)),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),

@@ -45,7 +45,7 @@ class _InternFragmentState extends State<InternFragment>
       padding: const EdgeInsets.all(15.0),
       child: Column(
         children: [
-          SizedBox(height: 40),
+          SizedBox(height: 20),
           Center(
               child: Text(
                   AppLocalizations.of(context).translate('interns_title'),
