@@ -522,7 +522,7 @@ class _InternFormState extends State<InternForm> {
           type: i == 0 ? 1 : 2,
           onSelect: (id, time, type) {
             if (time != null) {
-              double tm = time.hour + time.minute / 60.0;
+              double tm = (time.hour + time.minute / 60.0);
 
               bool inSt = false;
               bool outSt = false;
@@ -714,11 +714,11 @@ class _InternFormState extends State<InternForm> {
           .createProfile(userModel: userModel);
       await Provider.of<UserViewModel>(context, listen: false).sendEmail(
           message:
-              'Howdy, ${firstName.trim()} ${lastName.trim()}! Your school administrator has signed you up to Punch, a neat time servicing application for internships. iOS click here: https://apps.apple.com/us/app/punch-intern/id1571327393. Android click here: https://play.google.com/store/apps/details?id=com.punch.android.intern&hl=en_US&gl=US. Your registration code is: $regCode',
+              'Howdy, ${firstName.trim()} ${lastName.trim()}! Your school administrator has signed you up to Punch, a neat time servicing application for internships. \n \niOS click here: https://apps.apple.com/us/app/punch-intern/id1571327393. \n \nAndroid click here: https://play.google.com/store/apps/details?id=com.punch.android.intern&hl=en_US&gl=US. \n \nYour registration code is: $regCode',
           email: userModel.email);
       await Provider.of<UserViewModel>(context, listen: false).sendEmail(
           message:
-              'Howdy, ${firstName.trim()} ${lastName.trim()}! Your school administrator has signed you up to Punch, a neat time servicing application for internships. iOS click here: https://apps.apple.com/us/app/punch-intern/id1571327393. Android click here: https://play.google.com/store/apps/details?id=com.punch.android.intern&hl=en_US&gl=US. Your registration code is: $regCode',
+              'Howdy, ${firstName.trim()} ${lastName.trim()}! Your school administrator has signed you up to Punch, a neat time servicing application for internships. \n \niOS click here: https://apps.apple.com/us/app/punch-intern/id1571327393. \n \nAndroid click here: https://play.google.com/store/apps/details?id=com.punch.android.intern&hl=en_US&gl=US. \n \nYour registration code is: $regCode',
           email: Provider.of<UserViewModel>(context, listen: false).email);
       //Provider.of<CompaniesViewModel>(context, listen: false).addToList(model: userModel);
 

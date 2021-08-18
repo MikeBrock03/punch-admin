@@ -407,11 +407,11 @@ class _RegisterState extends State<Register> with TickerProviderStateMixin {
           .setUserModel(userModel);
       await Provider.of<UserViewModel>(context, listen: false).sendEmail(
           message:
-              'Welcome to the Punch family! Your Punch registration code is: $regCode',
+              'Welcome to the Punch family! \n \nYour Punch registration code is: $regCode',
           email: userModel.email);
       await Provider.of<UserViewModel>(context, listen: false).sendEmail(
           message:
-              'This is Michael from Punch Developers, thank you so much for signing up for our service. We want to inform you that you have signed up for a monthly free trial. If you would like to continue your subscription, subscribe at https://punchdevelopers.com!',
+              'This is Michael from Punch Developers, thank you so much for signing up for our service. We want to inform you that you have signed up for a monthly free trial. \n \nIf you would like to continue your subscription, subscribe at https://punchdevelopers.com!',
           email: userModel.email);
       await Provider.of<UserViewModel>(context, listen: false).sendEmail(
           message:

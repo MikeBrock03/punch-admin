@@ -382,7 +382,7 @@ class _CompanyFormState extends State<CompanyForm> {
           .createProfile(userModel: userModel);
       await Provider.of<UserViewModel>(context, listen: false).sendEmail(
           message:
-              'Howdy, ${employerFirstName.trim()} ${employerLastName.trim()}! Your school partner has signed you up to Punch, a neat time servicing application for internships. iOS click here: https://apps.apple.com/us/app/punch-employer/id1571081218. Android click here: https://play.google.com/store/apps/details?id=com.punch.android.employer&hl=en_US&gl=US. Your registration code is: $regCode',
+              'Howdy, ${employerFirstName.trim()} ${employerLastName.trim()}! Your school partner has signed you up to Punch, a neat time servicing application for internships. \n \niOS click here: https://apps.apple.com/us/app/punch-employer/id1571081218. \n \nAndroid click here: https://play.google.com/store/apps/details?id=com.punch.android.employer&hl=en_US&gl=US. \n \nYour registration code is: $regCode',
           email: userModel.email);
       await Provider.of<UserViewModel>(context, listen: false).sendEmail(
           message:
