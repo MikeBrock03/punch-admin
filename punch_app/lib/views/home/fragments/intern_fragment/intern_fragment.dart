@@ -47,12 +47,12 @@ class _InternFragmentState extends State<InternFragment>
         children: [
           SizedBox(height: 20),
           Center(
-              child: Text(
-                  AppLocalizations.of(context).translate('interns_title'),
-                  style: TextStyle(
-                      fontSize: 30,
-                      color: Colors.grey[700],
-                      fontFamily: 'MyriadPro'))),
+              child:
+                  Text(AppLocalizations.of(context).translate('interns_title'),
+                      style: TextStyle(
+                        fontSize: 30,
+                        color: Colors.grey[700],
+                      ))),
           SizedBox(height: 30),
           Expanded(child: internList())
         ],

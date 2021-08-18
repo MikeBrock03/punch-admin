@@ -57,6 +57,8 @@ flutter:
     - family: MyriadPro
     - fonts: 
       - asset: assets/fonts/MyriadPro-Light.otf
+      - asset: assets/fonts/MyriadPro-BOLD.otf
+        weight: 700
       
 
   # fonts:

@@ -57,6 +57,7 @@ class App extends StatelessWidget {
         primaryColor: AppColors.primaryColor,
         primarySwatch: AppColors.materialAccentColor,
         canvasColor: Colors.transparent,
+        fontFamily: 'MyriadPro',
       ),
       supportedLocales: [
         const Locale('en', 'US'),
