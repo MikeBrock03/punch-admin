@@ -213,6 +213,27 @@ class FirestoreService {
     }
   }
 
+  Future<dynamic> getUserClockHistoryByDateRange({ @required String uID, Timestamp startDate, Timestamp endDate }) async{
+    try{
+      dynamic result;
+      await userCollection.doc(uID).collection('clock_history')
+          .where('date', isGreaterThanOrEqualTo: startDate)
+          .where('date', isLessThanOrEqualTo: endDate)
+          .get().then((QuerySnapshot snapshot){
+        if(snapshot != null && snapshot.docs.length > 0){
+          result = snapshot.docs;
+        }else{
+          return null;
+        }
+      });
+      return result;
+    }catch(error){
+      if(!AppConfig.isPublished){
+        return error;
+      }
+    }
+  }
+
   Stream<List<UserModel>> getRealTimeInterns({ String uID }) {
 
     try{

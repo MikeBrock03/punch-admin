@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:punch_app/view_models/export_view_model.dart';
 import 'package:punch_app/views/home/home.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'services/firebase_storage.dart';
@@ -36,6 +37,7 @@ Future<void> main() async {
         create: (BuildContext context) => FirestoreService()),
     Provider<FirebaseStorage>(
         create: (BuildContext context) => FirebaseStorage()),
+    ChangeNotifierProvider<ExportViewModel>(create: (BuildContext context) => ExportViewModel()),
     StreamProvider<UserModel>.value(
         value: FirebaseAuthService().authStateChanges, initialData: UserModel())
   ], child: App()));

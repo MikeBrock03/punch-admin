@@ -1,12 +1,18 @@
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:punch_app/config/app_config.dart';
+import 'package:punch_app/helpers/export_dialog.dart';
 import 'package:punch_app/helpers/no_glow_scroll_behavior.dart';
+import 'package:punch_app/view_models/export_view_model.dart';
 import 'package:punch_app/views/contact_info/contact_info.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../views/intern_view_select/intern_view_select.dart';
 import '../../helpers/loading_dialog.dart';
 import '../../view_models/companies_view_model.dart';
@@ -37,9 +43,33 @@ class _CompanyDetailState extends State<CompanyDetail> {
   final _globalScaffoldKey = GlobalKey<ScaffoldState>();
   bool loadingSt = true;
 
+  String companyWeeklyfilePath, companyMonthlyfilePath, companyYearlyfilePath;
+
+  void getLocalFiles() async {
+    final Directory directory = Platform.isAndroid
+        ? await getExternalStorageDirectory() //FOR ANDROID
+        : await getApplicationSupportDirectory(); //FOR iOS
+
+    final path = directory.path;
+    companyWeeklyfilePath = '$path/company-${widget.company.companyName.toLowerCase().replaceAll(' ', '-')}-weekly.csv';
+    companyMonthlyfilePath = '$path/company-${widget.company.companyName.toLowerCase().replaceAll(' ', '-')}-monthly.csv';
+    companyYearlyfilePath = '$path/company-${widget.company.companyName.toLowerCase().replaceAll(' ', '-')}-yearly.csv';
+
+    bool companyWeeklyfilePathExists = await File(companyWeeklyfilePath).exists();
+    if(!companyWeeklyfilePathExists){File(companyWeeklyfilePath).create();}
+
+    bool companyMonthlyfilePathExists = await File(companyMonthlyfilePath).exists();
+    if(!companyMonthlyfilePathExists){File(companyMonthlyfilePath).create();}
+
+    bool companyYearlyfilePathExists = await File(companyYearlyfilePath).exists();
+    if(!companyYearlyfilePathExists){File(companyYearlyfilePath).create();}
+
+  }
+
   @override
   void initState() {
     super.initState();
+    getLocalFiles();
     getData();
   }
 
@@ -80,6 +110,13 @@ class _CompanyDetailState extends State<CompanyDetail> {
         centerTitle: true,
         brightness: Brightness.dark,
         actions: [
+
+          IconButton(
+            tooltip: 'Export',
+            icon: Icon(Icons.ios_share),
+            onPressed: () => export(),
+          ),
+
           IconButton(
             tooltip: AppLocalizations.of(context).translate('delete'),
             icon: Icon(Icons.delete_outline),
@@ -322,5 +359,114 @@ class _CompanyDetailState extends State<CompanyDetail> {
           ],
         )
     );
+  }
+
+  void export(){
+    Future.delayed(Duration(milliseconds: 250), (){
+      showDialog(
+        context: context,
+        builder: (BuildContext dialogContext){
+          return ExportDialog(
+            globalKey: _globalScaffoldKey,
+            onWeekly: () => weeklyReport(),
+            onMonthly: () => monthlyReport(),
+            onYearly: () => yearlyReport(),
+          );
+        },
+      );
+    });
+  }
+
+  void weeklyReport() async{
+    try {
+
+      await Future.delayed(Duration(milliseconds: 500));
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return LoadingDialog();
+        },
+      );
+
+      dynamic result = await Provider.of<ExportViewModel>(context, listen: false).fetchCompanyWeeklyData(
+          company: widget.company,
+          localFile: File(companyWeeklyfilePath)
+      );
+
+      Navigator.of(context).pop();
+
+      if (result is bool && result) {
+        Share.shareFiles([companyWeeklyfilePath]);
+      } else {
+        Message.show(_globalScaffoldKey, 'Unable to create the CSV file, please try again later');
+      }
+    } catch (error) {
+      if (!AppConfig.isPublished) {
+        print('Error: $error');
+      }
+    }
+  }
+
+  void monthlyReport() async{
+    try {
+
+      await Future.delayed(Duration(milliseconds: 500));
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return LoadingDialog();
+        },
+      );
+
+      dynamic result = await Provider.of<ExportViewModel>(context, listen: false).fetchCompanyMonthlyData(
+          company: widget.company,
+          localFile: File(companyMonthlyfilePath)
+      );
+
+      Navigator.of(context).pop();
+
+      if (result is bool && result) {
+        Share.shareFiles([companyMonthlyfilePath]);
+      } else {
+        Message.show(_globalScaffoldKey, 'Unable to create the CSV file, please try again later');
+      }
+    } catch (error) {
+      if (!AppConfig.isPublished) {
+        print('Error: $error');
+      }
+    }
+  }
+
+  void yearlyReport() async{
+    try {
+
+      await Future.delayed(Duration(milliseconds: 500));
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return LoadingDialog();
+        },
+      );
+
+      dynamic result = await Provider.of<ExportViewModel>(context, listen: false).fetchCompanyYearlyData(
+          company: widget.company,
+          localFile: File(companyYearlyfilePath)
+      );
+
+      Navigator.of(context).pop();
+
+      if (result is bool && result) {
+        Share.shareFiles([companyYearlyfilePath]);
+      } else {
+        Message.show(_globalScaffoldKey, 'Unable to create the CSV file, please try again later');
+      }
+    } catch (error) {
+      if (!AppConfig.isPublished) {
+        print('Error: $error');
+      }
+    }
   }
 }

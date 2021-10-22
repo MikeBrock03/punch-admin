@@ -1,6 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:punch_app/helpers/export_dialog.dart';
+import 'package:punch_app/helpers/loading_dialog.dart';
+import 'package:punch_app/view_models/export_view_model.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:showcaseview/showcaseview.dart';
 import '../../view_models/companies_view_model.dart';
 import '../../view_models/interns_view_model.dart';
@@ -33,10 +40,32 @@ class _HomeState extends State<Home> {
 
   final keyOne = GlobalKey();
 
+  String allWeeklyfilePath, allMonthlyfilePath, allYearlyfilePath;
+
+  void getLocalFiles() async {
+    final Directory directory = Platform.isAndroid
+        ? await getExternalStorageDirectory() //FOR ANDROID
+        : await getApplicationSupportDirectory(); //FOR iOS
+    final path = directory.path;
+    allWeeklyfilePath = '$path/all-weekly.csv';
+    allMonthlyfilePath = '$path/all-monthly.csv';
+    allYearlyfilePath = '$path/all-yearly.csv';
+
+    bool allWeeklyfilePathExists = await File(allWeeklyfilePath).exists();
+    if(!allWeeklyfilePathExists){File(allWeeklyfilePath).create();}
+
+    bool allMonthlyfilePathExists = await File(allMonthlyfilePath).exists();
+    if(!allMonthlyfilePathExists){File(allMonthlyfilePath).create();}
+
+    bool allYearlyfilePathExists = await File(allYearlyfilePath).exists();
+    if(!allYearlyfilePathExists){File(allYearlyfilePath).create();}
+
+  }
+
   @override
   void initState() {
     super.initState();
-
+    getLocalFiles();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => ShowCaseWidget.of(context).startShowCase([
         keyOne,
@@ -77,6 +106,14 @@ class _HomeState extends State<Home> {
           ),
           centerTitle: true,
           brightness: Brightness.dark,
+          leading: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: IconButton(
+              tooltip: 'Export',
+              icon: Icon(Icons.ios_share),
+              onPressed: () => export(),
+            ),
+          ),
           actions: [
             Padding(
               padding: const EdgeInsets.all(5.0),
@@ -197,6 +234,115 @@ class _HomeState extends State<Home> {
     if (this._companyPage == null)
       this._companyPage = CompanyFragment(globalScaffoldKey: globalScaffoldKey);
     return this._companyPage;
+  }
+
+  void export(){
+    Future.delayed(Duration(milliseconds: 250), (){
+      showDialog(
+        context: context,
+        builder: (BuildContext dialogContext){
+          return ExportDialog(
+            globalKey: globalScaffoldKey,
+            onWeekly: () => weeklyReport(),
+            onMonthly: () => monthlyReport(),
+            onYearly: () => yearlyReport(),
+          );
+        },
+      );
+    });
+  }
+
+  void weeklyReport() async{
+    try {
+
+      await Future.delayed(Duration(milliseconds: 500));
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return LoadingDialog();
+        },
+      );
+
+      dynamic result = await Provider.of<ExportViewModel>(context, listen: false).fetchAllCompaniesWeeklyData(
+          uID: Provider.of<UserViewModel>(context, listen: false).uID,
+          localFile: File(allWeeklyfilePath)
+      );
+
+      Navigator.of(context).pop();
+
+      if (result is bool && result) {
+        Share.shareFiles([allWeeklyfilePath]);
+      } else {
+        Message.show(globalScaffoldKey, 'Unable to create the CSV file, please try again later');
+      }
+    } catch (error) {
+      if (!AppConfig.isPublished) {
+        print('Error: $error');
+      }
+    }
+  }
+
+  void monthlyReport() async{
+    try {
+
+      await Future.delayed(Duration(milliseconds: 500));
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return LoadingDialog();
+        },
+      );
+
+      dynamic result = await Provider.of<ExportViewModel>(context, listen: false).fetchAllCompaniesMonthlyData(
+          uID: Provider.of<UserViewModel>(context, listen: false).uID,
+          localFile: File(allMonthlyfilePath)
+      );
+
+      Navigator.of(context).pop();
+
+      if (result is bool && result) {
+        Share.shareFiles([allMonthlyfilePath]);
+      } else {
+        Message.show(globalScaffoldKey, 'Unable to create the CSV file, please try again later');
+      }
+    } catch (error) {
+      if (!AppConfig.isPublished) {
+        print('Error: $error');
+      }
+    }
+  }
+
+  void yearlyReport() async{
+    try {
+
+      await Future.delayed(Duration(milliseconds: 500));
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return LoadingDialog();
+        },
+      );
+
+      dynamic result = await Provider.of<ExportViewModel>(context, listen: false).fetchAllCompaniesYearlyData(
+          uID: Provider.of<UserViewModel>(context, listen: false).uID,
+          localFile: File(allYearlyfilePath)
+      );
+
+      Navigator.of(context).pop();
+
+      if (result is bool && result) {
+        Share.shareFiles([allYearlyfilePath]);
+      } else {
+        Message.show(globalScaffoldKey, 'Unable to create the CSV file, please try again later');
+      }
+    } catch (error) {
+      if (!AppConfig.isPublished) {
+        print('Error: $error');
+      }
+    }
   }
 
   void logout() {

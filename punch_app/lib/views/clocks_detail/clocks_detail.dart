@@ -1,9 +1,16 @@
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:punch_app/helpers/export_dialog.dart';
+import 'package:punch_app/helpers/loading_dialog.dart';
+import 'package:punch_app/view_models/export_view_model.dart';
+import 'package:share_plus/share_plus.dart';
 import 'components/date_picker_field.dart';
 import 'components/mini_map.dart';
 import '../../helpers/fading_edge_scrollview.dart';
@@ -32,9 +39,33 @@ class _ClocksDetailState extends State<ClocksDetail> {
   int _current = 0;
   double sliderHeight = 288;
 
+  String internWeeklyfilePath, internMonthlyfilePath, internYearlyfilePath;
+
+  void getLocalFiles() async {
+    final Directory directory = Platform.isAndroid
+        ? await getExternalStorageDirectory() //FOR ANDROID
+        : await getApplicationSupportDirectory(); //FOR iOS
+
+    final path = directory.path;
+    internWeeklyfilePath = '$path/intern-${widget.intern.firstName.toLowerCase().replaceAll(' ', '-')}-${widget.intern.lastName.toLowerCase().replaceAll(' ', '-')}-weekly.csv';
+    internMonthlyfilePath = '$path/intern-${widget.intern.firstName.toLowerCase().replaceAll(' ', '-')}-${widget.intern.lastName.toLowerCase().replaceAll(' ', '-')}-monthly.csv';
+    internYearlyfilePath = '$path/intern-${widget.intern.firstName.toLowerCase().replaceAll(' ', '-')}-${widget.intern.lastName.toLowerCase().replaceAll(' ', '-')}-yearly.csv';
+
+    bool internWeeklyfilePathExists = await File(internWeeklyfilePath).exists();
+    if(!internWeeklyfilePathExists){File(internWeeklyfilePath).create();}
+
+    bool internMonthlyfilePathExists = await File(internMonthlyfilePath).exists();
+    if(!internMonthlyfilePathExists){File(internMonthlyfilePath).create();}
+
+    bool internYearlyfilePathExists = await File(internYearlyfilePath).exists();
+    if(!internYearlyfilePathExists){File(internYearlyfilePath).create();}
+
+  }
+
   @override
   void initState() {
     super.initState();
+    getLocalFiles();
     getData(DateTime.now());
   }
 
@@ -119,6 +150,16 @@ class _ClocksDetailState extends State<ClocksDetail> {
             style: TextStyle(fontSize: 18)),
         centerTitle: true,
         brightness: Brightness.dark,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 5.0),
+            child: IconButton(
+              tooltip: 'Export',
+              icon: Icon(Icons.ios_share),
+              onPressed: () => export(),
+            ),
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
       body: clocksDetailBody(),
@@ -380,5 +421,114 @@ class _ClocksDetailState extends State<ClocksDetail> {
         ],
       ),
     );
+  }
+
+  void export(){
+    Future.delayed(Duration(milliseconds: 250), (){
+      showDialog(
+        context: context,
+        builder: (BuildContext dialogContext){
+          return ExportDialog(
+            globalKey: _globalScaffoldKey,
+            onWeekly: () => weeklyReport(),
+            onMonthly: () => monthlyReport(),
+            onYearly: () => yearlyReport(),
+          );
+        },
+      );
+    });
+  }
+
+  void weeklyReport() async{
+    try {
+
+      await Future.delayed(Duration(milliseconds: 500));
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return LoadingDialog();
+        },
+      );
+
+      dynamic result = await Provider.of<ExportViewModel>(context, listen: false).fetchInternWeeklyData(
+          intern: widget.intern,
+          localFile: File(internWeeklyfilePath)
+      );
+
+      Navigator.of(context).pop();
+
+      if (result is bool && result) {
+        Share.shareFiles([internWeeklyfilePath]);
+      } else {
+        Message.show(_globalScaffoldKey, 'Unable to create the CSV file, please try again later');
+      }
+    } catch (error) {
+      if (!AppConfig.isPublished) {
+        print('Error: $error');
+      }
+    }
+  }
+
+  void monthlyReport() async{
+    try {
+
+      await Future.delayed(Duration(milliseconds: 500));
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return LoadingDialog();
+        },
+      );
+
+      dynamic result = await Provider.of<ExportViewModel>(context, listen: false).fetchInternMonthlyData(
+          intern: widget.intern,
+          localFile: File(internMonthlyfilePath)
+      );
+
+      Navigator.of(context).pop();
+
+      if (result is bool && result) {
+        Share.shareFiles([internMonthlyfilePath]);
+      } else {
+        Message.show(_globalScaffoldKey, 'Unable to create the CSV file, please try again later');
+      }
+    } catch (error) {
+      if (!AppConfig.isPublished) {
+        print('Error: $error');
+      }
+    }
+  }
+
+  void yearlyReport() async{
+    try {
+
+      await Future.delayed(Duration(milliseconds: 500));
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return LoadingDialog();
+        },
+      );
+
+      dynamic result = await Provider.of<ExportViewModel>(context, listen: false).fetchInternYearlyData(
+          intern: widget.intern,
+          localFile: File(internYearlyfilePath)
+      );
+
+      Navigator.of(context).pop();
+
+      if (result is bool && result) {
+        Share.shareFiles([internYearlyfilePath]);
+      } else {
+        Message.show(_globalScaffoldKey, 'Unable to create the CSV file, please try again later');
+      }
+    } catch (error) {
+      if (!AppConfig.isPublished) {
+        print('Error: $error');
+      }
+    }
   }
 }

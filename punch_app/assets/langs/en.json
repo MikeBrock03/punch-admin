@@ -172,5 +172,9 @@
   "clock_in_fail": "Unable to clock in, please try again later",
   "clock_out_fail": "Unable to clock out, please try again later",
   "status": "Status",
-  "your_interns": "Your Interns"
+  "your_interns": "Your Interns",
+  "export_csv_file": "Export CSV File",
+  "weekly": "Weekly",
+  "monthly": "Monthly",
+  "all_time": "Yearly"
 }
